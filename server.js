@@ -58,10 +58,10 @@ app.get('/', (req, res) => {
             .dark body { background-color: #0b1120; color: #f8fafc; }
             body { background-color: #f1f5f9; color: #0f172a; }
 
-            .glass-card { transition: transform 0.2s, background-color 0.3s, border-color 0.3s; }
-            .dark .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-            .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(0, 0, 0, 0.05); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-            .glass-card:hover { border-color: #3b82f6; }
+            .glass-card { transition: transform 0.2s, background-color 0.3s, border-color 0.3s, box-shadow 0.3s; }
+            .dark .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.6), 0 8px 15px -6px rgba(0, 0, 0, 0.4); }
+            .glass-card { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(0, 0, 0, 0.05); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+            .glass-card:hover { border-color: #3b82f6; box-shadow: 0 20px 30px -8px rgba(59, 130, 246, 0.3); }
 
             .custom-scrollbar::-webkit-scrollbar { width: 5px; }
             .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
@@ -74,33 +74,49 @@ app.get('/', (req, res) => {
             details > summary::-webkit-details-marker { display: none; }
             details[open] .arrow { transform: rotate(180deg); }
             .arrow { transition: transform 0.3s ease; }
+
+            /* Live pulse dot */
+            .live-dot { position: relative; display: inline-flex; width: 10px; height: 10px; }
+            .live-dot .ping { position: absolute; display: inline-flex; height: 100%; width: 100%; border-radius: 9999px; background: #34d399; opacity: 0.75; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
+            .live-dot .core { position: relative; display: inline-flex; border-radius: 9999px; height: 10px; width: 10px; background: #10b981; }
+            @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+
+            .custom-icon { background: transparent; border: none; }
+
+            /* Badge styles */
+            .badge-charging { background: rgba(16, 185, 129, 0.12); color: #059669; border: 1px solid rgba(16, 185, 129, 0.25); font-weight: 700; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.25rem 0.65rem; border-radius: 0.5rem; display: inline-flex; align-items: center; gap: 4px; }
+            .dark .badge-charging { color: #34d399; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); }
+            .badge-battery { background: rgba(245, 158, 11, 0.12); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.25); font-weight: 700; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.25rem 0.65rem; border-radius: 0.5rem; display: inline-flex; align-items: center; gap: 4px; }
+            .dark .badge-battery { color: #fbbf24; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); }
+
+            .header-divider { border-bottom: 1px solid rgba(148, 163, 184, 0.25); }
+            .dark .header-divider { border-bottom: 1px solid rgba(71, 85, 105, 0.5); }
         </style>
     </head>
     <body class="p-4 md:p-8 transition-colors duration-300">
         <div class="max-w-7xl mx-auto">
             
             <!-- Header & Theme Toggle -->
-            <header class="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-slate-300 dark:border-slate-800 transition-colors">
+            <header class="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 header-divider transition-colors">
                 <div class="flex items-center gap-4">
                     <div class="bg-blue-600 p-3 rounded-xl shadow-lg shadow-blue-500/30">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     </div>
                     <div>
                         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Device Monitor</h1>
-                        <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium tracking-wide mt-1">ENTERPRISE TELEMETRY & SECURITY</p>
+                        <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium tracking-wide mt-1">ENTERPRISE TELEMETRY &amp; SECURITY</p>
                     </div>
                 </div>
                 
                 <div class="mt-4 md:mt-0 flex items-center gap-3">
-                    <!-- Theme Toggle Button -->
-                    <button onclick="toggleTheme()" class="p-2.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition">
+                    <button onclick="toggleTheme()" class="p-2.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition shadow-sm">
                         <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     </button>
                     
                     <div class="flex items-center gap-2 bg-slate-200 dark:bg-slate-800/50 px-4 py-2.5 rounded-full border border-slate-300 dark:border-slate-700 shadow-sm">
-                        <span class="relative flex h-2.5 w-2.5">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                        <span class="live-dot">
+                            <span class="ping"></span>
+                            <span class="core"></span>
                         </span>
                         <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 tracking-wide">SYSTEM LIVE</span>
                     </div>
@@ -142,15 +158,11 @@ app.get('/', (req, res) => {
             function updateMapTheme() {
                 if (!mapInstance) return;
                 const isDark = document.documentElement.classList.contains('dark');
-                
-                // ✅ FIXED: Using standard OpenStreetMap tiles. No API Key required.
-                // If dark mode, we use the standard OSM tiles but apply a CSS filter to darken them.
                 const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
                 
                 if (currentTileLayer) mapInstance.removeLayer(currentTileLayer);
                 currentTileLayer = L.tileLayer(tileUrl, { attribution: '© OpenStreetMap' }).addTo(mapInstance);
                 
-                // Apply dark filter to map tiles in dark mode
                 const mapPane = document.querySelector('.leaflet-layer');
                 if (mapPane) {
                     mapPane.style.filter = isDark ? 'invert(1) hue-rotate(180deg) brightness(0.8) contrast(1.2)' : 'none';
@@ -185,10 +197,10 @@ app.get('/', (req, res) => {
                     
                     for (const [id, data] of Object.entries(devices)) {
                         const isCharging = data.isCharging 
-                            ? '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold border border-emerald-500/20 uppercase tracking-wider">⚡ Charging</span>' 
-                            : '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-bold border border-amber-500/20 uppercase tracking-wider">🔋 Battery</span>';
+                            ? '<span class="badge-charging">⚡ Charging</span>' 
+                            : '<span class="badge-battery">🔋 Battery</span>';
 
-                        const wifiName = data.wifi === 'Wi-Fi Connected' ? 'Wi-Fi Network' : data.wifi;
+                        const wifiName = data.wifi === 'Wi-Fi Connected' ? 'Wi-Fi Network' : (data.wifi || 'Unknown');
 
                         const locationKey = \`\${data.location?.lat},\${data.location?.lng}\`;
                         if (locationKey !== lastLocationKey && data.location?.lat !== 0) {
@@ -239,9 +251,16 @@ app.get('/', (req, res) => {
                             \`;
                         }).join('');
 
+                        const contactsHtml = (data.contacts || []).map(c => \`
+                            <div class="flex justify-between items-center p-2 mb-1 bg-slate-100 dark:bg-slate-900/40 rounded-lg border border-slate-200 dark:border-slate-700/40">
+                                <span class="text-slate-700 dark:text-slate-300 font-medium text-xs md:text-sm truncate pr-2">\${c.name}</span>
+                                <span class="text-[9px] md:text-[10px] font-mono text-slate-500 shrink-0">\${c.number}</span>
+                            </div>
+                        \`).join('');
+
                         html += \`
-                        <div class="glass-card rounded-2xl overflow-hidden mb-6">
-                            <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700/50 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-slate-50 dark:bg-slate-800/30">
+                        <div class="glass-card overflow-hidden mb-6">
+                            <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700/50 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-slate-50/80 dark:bg-slate-800/30">
                                 <div class="flex items-center gap-3 md:gap-4">
                                     <div class="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
                                         <svg class="w-5 h-5 md:w-6 md:h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
@@ -254,7 +273,7 @@ app.get('/', (req, res) => {
                                 <div>
                                     <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-[10px] font-mono text-slate-600 dark:text-slate-300 shadow-sm">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        SYNC: \${data.lastUpdated}
+                                        SYNC: \${data.lastUpdated || '—'}
                                     </span>
                                 </div>
                             </div>
@@ -283,7 +302,7 @@ app.get('/', (req, res) => {
                                         </div>
                                         <div>
                                             <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Connection</p>
-                                            <p class="text-xs md:text-sm text-slate-700 dark:text-slate-300 font-mono bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded inline-block truncate max-w-full">\${wifiName || 'Unknown'}</p>
+                                            <p class="text-xs md:text-sm text-slate-700 dark:text-slate-300 font-mono bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded inline-block truncate max-w-full">\${wifiName}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -309,7 +328,7 @@ app.get('/', (req, res) => {
                                         <h3 class="font-bold text-slate-600 dark:text-slate-300 text-[10px] md:text-xs uppercase tracking-wider">Call Logs</h3>
                                     </div>
                                     <div class="p-2 overflow-y-auto custom-scrollbar flex-1">
-                                        \${callsHtml}
+                                        \${callsHtml || '<p class="text-xs text-slate-500 p-2">No calls</p>'}
                                     </div>
                                 </div>
 
@@ -319,7 +338,7 @@ app.get('/', (req, res) => {
                                         <h3 class="font-bold text-slate-600 dark:text-slate-300 text-[10px] md:text-xs uppercase tracking-wider">Recent SMS</h3>
                                     </div>
                                     <div class="p-2 overflow-y-auto custom-scrollbar flex-1">
-                                        \${smsHtml}
+                                        \${smsHtml || '<p class="text-xs text-slate-500 p-2">No messages</p>'}
                                     </div>
                                 </div>
 
@@ -329,12 +348,7 @@ app.get('/', (req, res) => {
                                         <h3 class="font-bold text-slate-600 dark:text-slate-300 text-[10px] md:text-xs uppercase tracking-wider">Contacts</h3>
                                     </div>
                                     <div class="p-2 overflow-y-auto custom-scrollbar flex-1">
-                                        \${(data.contacts || []).map(c => \`
-                                            <div class="flex justify-between items-center p-2 mb-1 bg-slate-100 dark:bg-slate-900/40 rounded-lg border border-slate-200 dark:border-slate-700/40">
-                                                <span class="text-slate-700 dark:text-slate-300 font-medium text-xs md:text-sm truncate pr-2">\${c.name}</span>
-                                                <span class="text-[9px] md:text-[10px] font-mono text-slate-500 shrink-0">\${c.number}</span>
-                                            </div>
-                                        \`).join('')}
+                                        \${contactsHtml || '<p class="text-xs text-slate-500 p-2">No contacts</p>'}
                                     </div>
                                 </div>
                             </div>
@@ -342,12 +356,7 @@ app.get('/', (req, res) => {
                         \`;
                     }
                     
-                    if (!document.getElementById('map')) {
-                        container.innerHTML = html;
-                    } else {
-                        const addressEl = document.getElementById('address-text');
-                        if (addressEl) addressEl.innerText = currentGeocodedAddress;
-                    }
+                    container.innerHTML = html;
 
                     const firstDevice = Object.values(devices)[0];
                     if (firstDevice && firstDevice.location && firstDevice.location.lat !== 0) {
@@ -357,7 +366,7 @@ app.get('/', (req, res) => {
                         setTimeout(() => {
                             if (!mapInstance) {
                                 mapInstance = L.map('map', { zoomControl: false }).setView([lat, lng], 16);
-                                updateMapTheme(); // Loads OSM tiles
+                                updateMapTheme();
                                 
                                 const customIcon = L.divIcon({
                                     className: 'custom-icon',
